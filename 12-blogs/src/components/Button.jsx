@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Button({
-  name,
+  children,
   type = "button",
   bgColor = "bg-blue-600",
   textColor = "text-white",
