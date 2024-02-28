@@ -33,7 +33,7 @@ class ConfigServices {
     }
   }
 
-  async updateBlog({ title, slug, featuredImage, content, status, userId }) {
+  async updateBlog(slug, { title, featuredImage, content, status }) {
     try {
       return await this.database.updateDocument(
         config.appwriteDatabaseId,
@@ -44,7 +44,6 @@ class ConfigServices {
           featuredImage,
           content,
           status,
-          userId,
         }
       );
     } catch (error) {
@@ -119,6 +118,6 @@ class ConfigServices {
   }
 }
 
-const configServices = new ConfigServices();
+const appwriteServices = new ConfigServices();
 
-export default configServices;
+export default appwriteServices;
