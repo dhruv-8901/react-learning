@@ -8,7 +8,20 @@ export class AuthServices {
     this.client
       .setEndpoint(config.appwriteUrl) // Your API Endpoint
       .setProject(config.appwriteProjectId);
+
     this.account = new Account(this.client);
+    let promise = this.account.createSession(
+      "pateldhruv123890@gmail.com",
+      "REEBOKdhru@123"
+    );
+    promise.then(
+      function (response) {
+        console.log(response); // Success
+      },
+      function (error) {
+        console.log(error); // Failure
+      }
+    );
   }
 
   async createAccount({ email, password, name }) {
