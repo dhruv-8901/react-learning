@@ -6,11 +6,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
+import { useNavigate } from "react-router-dom";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState } = useForm();
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const loginForm = async (data) => {
     setLoading(true);
@@ -21,11 +24,12 @@ function Login() {
           data
         );
         setLoading(false);
-        dispatch(login(loginData.data.auth));
+        sessionStorage.setItem("userData", JSON.stringify(loginData.data.auth));
         showToast(
           "success",
           loginData.data ? loginData.data.message : "success"
         );
+        navigate("/");
       }
     } catch (error) {
       setLoading(false);
@@ -44,9 +48,10 @@ function Login() {
         <div className="w-full text-center font-bold">Login</div>
         <form onSubmit={handleSubmit(loginForm)} className="mt-8">
           <div className="space-y-5">
-            <input
+            <Input
+              label="Email :-"
               placeholder="Enter your email"
-              className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+              className="mb-4"
               type="email"
               {...register("email", {
                 required: true,
@@ -57,21 +62,18 @@ function Login() {
                 },
               })}
             />
-            <input
+
+            <Input
+              label="Password :-"
               placeholder="Enter your password"
-              className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+              className="mb-4"
               type="password"
               {...register("password", {
                 required: true,
               })}
             />
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="px-3 py-2 rounded-lg bg-black text-white"
-              >
-                Login
-              </button>
+              <Button type="submit" name="Login" className="mb-4" />
             </div>
           </div>
         </form>

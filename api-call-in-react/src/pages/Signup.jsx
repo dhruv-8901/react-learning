@@ -72,12 +72,7 @@ function Signup() {
               })}
             />
             <div className="flex justify-center">
-              <button
-                type="submit"
-                className="px-3 py-2 rounded-lg bg-black text-white"
-              >
-                Signup
-              </button>
+              <Button type="submit" name="Signup" className="mb-4" />
             </div>
           </div>
         </form>
