@@ -2,22 +2,48 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosTemplate, showToast } from "../common/helper";
 import Button from "../components/Button";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 function Blog() {
   const { blogId } = useParams();
   const sessionData = sessionStorage.getItem("userData");
+  const userData = JSON.parse(sessionData);
+  const axiosInstance = axiosTemplate(userData.accessToken);
   const [blog, setBlog] = useState(null);
   const navigate = useNavigate();
 
+  const deleteAlert = () => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axiosInstance
+              .delete(`blog/${blogId}`)
+              .then((res) => {
+                showToast("success", res.data.message);
+                navigate("/");
+              })
+              .catch((error) => {
+                showToast("error", error.response.data.message);
+              });
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
     if (blogId) {
-      const userData = JSON.parse(sessionData);
-      const axiosInstance = axiosTemplate(userData.accessToken);
       axiosInstance
         .get(`blog/${blogId}`)
         .then((response) => {
-          console.log(response.data.data);
-
           setBlog(response.data.data);
         })
         .catch((error) => {
@@ -53,6 +79,7 @@ function Blog() {
                   type="button"
                   name="Delete"
                   className="mb-4 mr-4 !px-6"
+                  onClick={deleteAlert}
                 />
               </div>
             )}

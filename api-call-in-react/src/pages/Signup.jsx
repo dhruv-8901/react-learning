@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/Button";
 
 function Signup() {
   const { register, handleSubmit, reset } = useForm();
@@ -42,6 +43,14 @@ function Signup() {
         <div className="w-full text-center font-bold">Signup</div>
         <form onSubmit={handleSubmit(login)} className="mt-8">
           <div className="space-y-5">
+            <input
+              placeholder="Enter your name"
+              className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"
+              type="name"
+              {...register("name", {
+                required: true,
+              })}
+            />
             <input
               placeholder="Enter your email"
               className="px-3 py-2 rounded-lg bg-white text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full"

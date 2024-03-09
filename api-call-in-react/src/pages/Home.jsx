@@ -24,7 +24,6 @@ function Home() {
           const data = response.data.data;
           if (data && data.length) {
             setBlogs(response.data.data);
-            console.log(response.data.data);
           }
         })
         .catch((error) => {
@@ -38,16 +37,16 @@ function Home() {
 
   return (
     <>
-      <div class="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 float-right mr-5">
+      <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 float-right mr-5">
         <button
           type="button"
-          class="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           onClick={() => navigate("/blog/add")}
         >
           Add Blog
         </button>
       </div>
-      <div className="flex items-center justify-center w-full mt-4">
+      <div className="items-center justify-center w-full mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {loading && <Loader />}
 
         {blogs.map((blog) => (

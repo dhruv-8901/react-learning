@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { set, useForm } from "react-hook-form";
 import Input from "./Input";
 import Button from "./Button";
 import { axiosTemplate, showToast } from "../common/helper";
@@ -7,12 +7,13 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 function BlogForm({ post }) {
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      title: post.title,
-      content: post.content,
-    },
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    trigger,
+  } = useForm();
   const [selectedImage, setSelectedImage] = useState(post ? post.image : null);
   const sessionData = sessionStorage.getItem("userData");
   const navigate = useNavigate();
@@ -20,7 +21,16 @@ function BlogForm({ post }) {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setSelectedImage(URL.createObjectURL(file));
+    trigger("image");
   };
+
+  useEffect(() => {
+    if (post) {
+      setValue("title", post.title);
+      setValue("content", post.content);
+      setSelectedImage(post.image);
+    }
+  }, [post]);
 
   const submit = (data) => {
     const userData = JSON.parse(sessionData);
@@ -32,7 +42,6 @@ function BlogForm({ post }) {
       if (data.image && data.image.length) {
         data.image = data.image[0];
       }
-      console.log(data);
       if (post) {
         axiosInstance
           .put(`blog/${post._id}`, data)
@@ -68,21 +77,29 @@ function BlogForm({ post }) {
             <Input
               label="Title :-"
               placeHolder="Enter blog title"
-              className="mb-4"
+              className=""
               type="text"
               {...register("title", {
-                required: !post,
+                // required: !post ? "Title is required" : false,
+                required: "Title is required",
               })}
             />
+            {errors.title && (
+              <p className="text-red-500">{errors.title.message}</p>
+            )}
             <Input
               label="content :-"
               placeHolder="Enter blog content"
-              className="mb-4"
+              className=""
               type="text"
               {...register("content", {
-                required: !post,
+                // required: !post ? "Content is required" : false,
+                required: "Content is required",
               })}
             />
+            {errors.content && (
+              <p className="text-red-500">{errors.content.message}</p>
+            )}
             {selectedImage && (
               <div className="mt-4">
                 <img
@@ -95,13 +112,16 @@ function BlogForm({ post }) {
             <Input
               label="image :-"
               placeHolder=""
-              className="mb-4"
+              className=""
               type="file"
               {...register("image", {
-                required: !post,
+                required: !post ? "Image is reuired" : false,
               })}
               onChange={handleImageChange}
             />
+            {errors.image && (
+              <p className="text-red-500">{errors.image.message}</p>
+            )}
             <div className="flex justify-center">
               <Button
                 type="submit"

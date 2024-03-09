@@ -15,6 +15,8 @@ import Home from "./pages/Home.jsx";
 import AddBlog from "./pages/AddBlog.jsx";
 import Blog from "./pages/Blog.jsx";
 import EditPage from "./pages/EditPage.jsx";
+import Profile from "./pages/Profile.jsx";
+import EditProfile from "./pages/EditProfile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/profile",
+        element: <EditProfile />,
       },
       {
         path: "/login",
