@@ -5,7 +5,7 @@ import BlogForm from "../components/BlogForm";
 
 function EditPage() {
   const { blogId } = useParams();
-  const [post, setPost] = useState();
+  const [post, setPost] = useState(null);
   const navigate = useNavigate();
   const sessionData = sessionStorage.getItem("userData");
 
@@ -31,11 +31,7 @@ function EditPage() {
     }
   }, [blogId, navigate]);
 
-  return (
-    <>
-      <BlogForm post={post} />
-    </>
-  );
+  return post ? <BlogForm post={post} /> : null;
 }
 
 export default EditPage;

@@ -11,9 +11,13 @@ function BlogForm({ post }) {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     trigger,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      title: post?.title || "",
+      content: post?.content || "",
+    },
+  });
   const [selectedImage, setSelectedImage] = useState(post ? post.image : null);
   const sessionData = sessionStorage.getItem("userData");
   const navigate = useNavigate();
@@ -26,8 +30,6 @@ function BlogForm({ post }) {
 
   useEffect(() => {
     if (post) {
-      setValue("title", post.title);
-      setValue("content", post.content);
       setSelectedImage(post.image);
     }
   }, [post]);
