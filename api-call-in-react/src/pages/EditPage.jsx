@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosTemplate, showToast } from "../common/helper";
-import BlogForm from "../components/BlogForm";
+import { BlogForm } from "../components";
 
 function EditPage() {
   const { blogId } = useParams();

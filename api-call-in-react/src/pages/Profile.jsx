@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { axiosTemplate } from "../common/helper";
-import Button from "../components/Button";
+import { Button } from "../components";
 
 function Profile() {
   const sessionData = sessionStorage.getItem("userData");

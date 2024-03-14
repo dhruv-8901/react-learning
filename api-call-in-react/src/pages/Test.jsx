@@ -1,9 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import Button from "../components/Button";
-import Input from "../components/Input";
-import CustomInput from "../components/CustomInput";
+import { CustomInput, Button } from "../components";
 
 function Test() {
   const initialValues = {

@@ -3,11 +3,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
-import { useDispatch } from "react-redux";
-import { login } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import { Input, Button } from "../components";
 
 function Login() {
   const { register, handleSubmit, formState } = useForm();

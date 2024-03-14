@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
 import { useNavigate } from "react-router-dom";
-import Button from "../components/Button";
+import { Button } from "../components";
 
 function Signup() {
   const { register, handleSubmit, reset } = useForm();

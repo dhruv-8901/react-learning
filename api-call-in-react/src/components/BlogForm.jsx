@@ -73,7 +73,9 @@ function BlogForm({ post }) {
       <div
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
-        <div className="w-full text-center font-bold">Login</div>
+        <div className="w-full text-center font-bold">
+          {post ? "Edit Blog" : "Add Blog"}
+        </div>
         <form onSubmit={handleSubmit(submit)} className="mt-8">
           <div className="space-y-5">
             <Input

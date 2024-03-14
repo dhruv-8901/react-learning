@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosTemplate, showToast } from "../common/helper";
-import Button from "../components/Button";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Button } from "../components";
 
 function Blog() {
   const { blogId } = useParams();
