@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosTemplate } from "../common/helper";
 import { Loader } from "../components";
 import moment from "moment";
-import logo from "../../public/logo.png";
-
+import logo from "../assets/logo.png";
 function Home() {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
