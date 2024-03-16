@@ -4,7 +4,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
 import { useNavigate } from "react-router-dom";
-import { Input, Button } from "../components";
+import { Input, Button, Loader } from "../components";
 
 function Login() {
   const { register, handleSubmit, formState } = useForm();
@@ -19,7 +19,6 @@ function Login() {
           "http://localhost:6001/api/v1/auth/login",
           data
         );
-        setLoading(false);
         sessionStorage.setItem("userData", JSON.stringify(loginData.data.auth));
         showToast(
           "success",
@@ -28,11 +27,12 @@ function Login() {
         navigate("/");
       }
     } catch (error) {
-      setLoading(false);
       showToast(
         "error",
         error.response ? error.response.data.message : "Error"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +41,7 @@ function Login() {
       <div
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
+        {loading && <Loader />}
         <div className="w-full text-center font-bold">Login</div>
         <form onSubmit={handleSubmit(loginForm)} className="mt-8">
           <div className="space-y-5">

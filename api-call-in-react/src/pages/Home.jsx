@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosTemplate } from "../common/helper";
-import { Loader } from "../components";
+import { Input, Loader } from "../components";
 import moment from "moment";
 import logo from "../assets/logo.png";
 function Home() {
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
+  const [search, setSearch] = useState(null);
+  const [searchNow, setSearchNow] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(null);
   const navigate = useNavigate();
   const sessionData = sessionStorage.getItem("userData");
   useEffect(() => {
@@ -14,11 +18,18 @@ function Home() {
       navigate("/login");
     } else {
       setLoading(true);
+      setBlogs([]);
       const userData = JSON.parse(sessionData);
       const axiosInstance = axiosTemplate(userData.accessToken);
       axiosInstance
-        .get("blog")
+        .get("blog", {
+          params: {
+            search,
+            page: currentPage,
+          },
+        })
         .then((response) => {
+          setLastPage(response.data.meta.lastPage);
           const data = response.data.data;
           if (data && data.length) {
             setBlogs(response.data.data);
@@ -33,21 +44,51 @@ function Home() {
         })
         .finally(() => {
           setLoading(false);
+          setSearchNow(false);
         });
     }
-  }, []);
+  }, [currentPage, searchNow]);
 
   const convertDate = (date) => {
     return moment(date).format("MMMM DD, YYYY");
   };
 
+  console.log({ currentPage, lastPage, search });
+
   return (
     <>
       {loading && <Loader />}
-      <div class="container px-8 mx-auto xl:px-5 max-w-screen-lg py-5 lg:py-8 relative">
+      <div className="container px-8 mx-auto xl:px-5 max-w-screen-lg py-5 lg:py-8 relative">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <Input
+              label=""
+              placeholder="search"
+              className="!w-48"
+              type="text"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              type="button"
+              className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black ml-4"
+              onClick={() => {
+                setSearchNow(true), setCurrentPage(1), setLastPage(null);
+              }}
+            >
+              Search
+            </button>
+          </div>
+          <button
+            type="button"
+            className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            onClick={() => navigate("/blog/add")}
+          >
+            Add Blog
+          </button>
+        </div>
         <div className="mt-10 grid gap-10 md:grid-cols-2 lg:gap-10 xl:grid-cols-3">
           {blogs.map((blog) => (
-            <div className="group cursor-pointer">
+            <div className="group cursor-pointer" key={blog._id}>
               <div className="overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105 dark:bg-gray-800">
                 <a
                   className="relative block aspect-square"
@@ -131,32 +172,39 @@ function Home() {
                 </div>
               </div>
             </div>
-
-            // <div
-            //   key={blog._id}
-            //   className="mx-auto w-[300px] rounded-md border"
-            //   onClick={() => navigate(`/blog/${blog._id}`)}
-            // >
-            //   <img
-            //     src={blog.image}
-            //     alt="Laptop"
-            //     className="p-4 w-full rounded-t-md object-cover"
-            //   />
-            //   <div className="p-4">
-            //     <h1 className="text-lg font-semibold">{blog.title}</h1>
-            //     <p className="mt-3 text-sm text-gray-600">{blog.content}</p>
-            //   </div>
-            // </div>
           ))}
-          <div className="flex flex-col space-y-2 md:flex-row md:space-x-2 md:space-y-0 float-center mr-5">
-            <button
-              type="button"
-              className="rounded-md border border-black px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              onClick={() => navigate("/blog/add")}
+        </div>
+        <div className="flex justify-center items-center mt-6 mb-4">
+          <button
+            type="button"
+            className="rounded-md border border-black px-7 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black mr-20 mt-10"
+            disabled={currentPage == 1 ? true : false}
+            onClick={() =>
+              setCurrentPage((value) => (value > 1 ? value - 1 : value))
+            }
+          >
+            <span className={currentPage == 1 ? `blur-[1px]` : ""}>Prev</span>
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-black px-7  py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black mt-10"
+            disabled={
+              (lastPage && (currentPage == lastPage) == 1) || lastPage == 0
+                ? true
+                : false
+            }
+            onClick={() => setCurrentPage((value) => value + 1)}
+          >
+            <span
+              className={
+                (lastPage && (currentPage == lastPage) == 1) || lastPage == 0
+                  ? `blur-[1px]`
+                  : ""
+              }
             >
-              Add Blog
-            </button>
-          </div>
+              Next
+            </span>
+          </button>
         </div>
       </div>
     </>

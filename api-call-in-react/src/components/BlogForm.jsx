@@ -3,10 +3,11 @@ import { set, useForm } from "react-hook-form";
 import Input from "./Input";
 import Button from "./Button";
 import { axiosTemplate, showToast } from "../common/helper";
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "./Loader";
 
 function BlogForm({ post }) {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -35,41 +36,54 @@ function BlogForm({ post }) {
   }, [post]);
 
   const submit = (data) => {
-    const userData = JSON.parse(sessionData);
-    if (userData && data) {
-      const axiosInstance = axiosTemplate(
-        userData.accessToken,
-        "multipart/form-data"
-      );
-      if (data.image && data.image.length) {
-        data.image = data.image[0];
+    try {
+      setLoading(true);
+      const userData = JSON.parse(sessionData);
+      if (userData && data) {
+        const axiosInstance = axiosTemplate(
+          userData.accessToken,
+          "multipart/form-data"
+        );
+        if (data.image && data.image.length) {
+          data.image = data.image[0];
+        }
+        if (post) {
+          axiosInstance
+            .put(`blog/${post._id}`, data)
+            .then((res) => {
+              showToast("success", res.data.message);
+              navigate("/");
+            })
+            .catch((error) => {
+              console.log(error);
+              showToast("error", error.response && error.response.data.message);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        } else {
+          axiosInstance
+            .post(`blog`, data)
+            .then((res) => {
+              showToast("success", res.data.message);
+              navigate("/");
+            })
+            .catch((error) => {
+              showToast("error", error.response && error.response.data.message);
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
       }
-      if (post) {
-        axiosInstance
-          .put(`blog/${post._id}`, data)
-          .then((res) => {
-            showToast("success", res.data.message);
-            navigate("/");
-          })
-          .catch((error) => {
-            showToast("error", error.response.data.message);
-          });
-      } else {
-        axiosInstance
-          .post(`blog`, data)
-          .then((res) => {
-            showToast("success", res.data.message);
-            navigate("/");
-          })
-          .catch((error) => {
-            showToast("error", error.response.data.message);
-          });
-      }
+    } catch (error) {
+      showToast("error");
     }
   };
 
   return (
     <div className="flex items-center justify-center w-full mt-4">
+      {loading && <Loader />}
       <div
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
@@ -136,7 +150,6 @@ function BlogForm({ post }) {
           </div>
         </form>
       </div>
-      <ToastContainer />
     </div>
   );
 }

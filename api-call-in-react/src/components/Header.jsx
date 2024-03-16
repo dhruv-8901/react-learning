@@ -10,9 +10,10 @@ function Header() {
   const navigate = useNavigate();
   const sessionData = sessionStorage.getItem("userData");
   const userData = JSON.parse(sessionData);
-  const axiosInstance = axiosTemplate(userData.accessToken);
+  const axiosInstance = axiosTemplate(userData ? userData.accessToken : null);
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isRender, setIsRender] = useState(false);
 
   const logoutAlert = () => {
     if (sessionData) {
@@ -58,9 +59,12 @@ function Header() {
     } catch (error) {
       setIsAuth(false);
     } finally {
+      setIsRender(true);
       setLoading(false);
     }
   }, []);
+
+  console.log({ isRender, isAuth });
 
   return (
     <>
@@ -68,7 +72,7 @@ function Header() {
         <div className="container px-8 mx-auto xl:px-5 max-w-screen-lg py-5 lg:py-8">
           <nav>
             <div className="flex flex-wrap justify-between md:flex-nowrap md:gap-10">
-              <div class="order-1 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row md:justify-end">
+              <div className="order-1 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row md:justify-end">
                 <div className="flex items-center">
                   <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
                     <li className="px-5">
@@ -115,11 +119,10 @@ function Header() {
                   />
                 </a>
               </div>
-              <div class="order-2 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row">
+              <div className="order-2 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row">
                 <ul className="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
-                  {!isAuth && (
+                  {isRender && !isAuth && (
                     <div>
-                      {" "}
                       <li className="px-5">
                         <NavLink
                           to="/login"
@@ -133,6 +136,10 @@ function Header() {
                           Login
                         </NavLink>
                       </li>
+                    </div>
+                  )}
+                  {isRender && !isAuth && (
+                    <div>
                       <li className="px-5">
                         <NavLink
                           to="/signup"
@@ -148,7 +155,7 @@ function Header() {
                       </li>
                     </div>
                   )}
-                  {isAuth && (
+                  {isRender && isAuth && (
                     <div className="flex justify-end">
                       <li className="px-5">
                         <NavLink

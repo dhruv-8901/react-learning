@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../common/helper";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components";
+import { Button, Loader } from "../components";
 
 function Signup() {
   const { register, handleSubmit, reset } = useForm();
@@ -37,6 +37,7 @@ function Signup() {
 
   return (
     <div className="flex items-center justify-center w-full mt-4">
+      {loading && <Loader />}
       <div
         className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
       >
