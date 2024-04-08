@@ -21,9 +21,6 @@ function App() {
     setTheme("dark");
   };
 
-  // In the context api you can pass the variable and function to the one to another components directly without using nested props passing
-  // And in this if you create context and only pass varible with default value so in that you can set the state with the help of useState in where you can define and declare the context provider and in that is you pass the default fuction in create context so in that you can also chnage the method os that and pass it in the context provider
-
   return (
     <ThemeProvider value={{ theme, lightTheme, darkTheme }}>
       <div className="flex flex-wrap min-h-screen items-center">

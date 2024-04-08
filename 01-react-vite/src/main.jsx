@@ -8,4 +8,4 @@ function test1() {
 
 const dhru = createElement("a", { href: "https://google.com" }, "click me");
 
-ReactDOM.createRoot(document.getElementById("root")).render(test1());
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
