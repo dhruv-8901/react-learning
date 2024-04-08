@@ -96,6 +96,8 @@ function App() {
               className="border-2 border-black"
               onChange={(e) => setName(e.target.value)}
             />
+
+            
             <Button
               label="Add User"
               type="button"
