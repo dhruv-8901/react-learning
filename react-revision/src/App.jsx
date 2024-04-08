@@ -97,7 +97,6 @@ function App() {
               onChange={(e) => setName(e.target.value)}
             />
 
-            
             <Button
               label="Add User"
               type="button"
